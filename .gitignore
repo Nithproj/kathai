@@ -1,0 +1,26 @@
+# Python & Virtual Environments
+backend/venv/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Databases & Local Storage
+backend/data/*.db
+backend/storage/audio_vault/*.mp3
+backend/storage/audio_vault/*.wav
+
+# OS & IDE Files
+.DS_Store
+.vscode/
+.idea/
+
+# Flutter & Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+mobile/build/
+mobile/.dart_tool/

@@ -1,0 +1,27 @@
+name: kathai_app
+description: "Kathai App — Multilingual AI-Powered Audio Storytelling Mobile App for Kids & Parents."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  just_audio: ^0.9.36
+  audio_service: ^0.18.12
+  http: ^1.2.0
+  provider: ^6.1.1
+  flutter_colorpicker: ^1.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/audio/
