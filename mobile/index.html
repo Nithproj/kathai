@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kathai App - Parent Mobile Experience Prototype</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-4">
+
+  <div class="max-w-md mx-auto bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-2xl shadow-xl overflow-hidden font-sans">
+    
+    <!-- Header / Status Bar -->
+    <div class="bg-[var(--accent)] text-[var(--accent-foreground)] p-4 flex items-center justify-between border-b border-[var(--border)]">
+      <div class="flex items-center space-x-2">
+        <span class="text-xl">📖</span>
+        <div>
+          <h1 class="font-bold text-base leading-tight">Kathai App</h1>
+          <p class="text-xs opacity-90">Parent Mobile Studio & Cast</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 bg-black/20 px-2 py-1 rounded-full text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Aarav's Room (BT)</span>
+      </div>
+    </div>
+
+    <!-- ONE-TAP SMART PLAY BANNER (EXHAUSTED PARENT MODE) -->
+    <div class="bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 text-white p-3.5 px-4 flex items-center justify-between border-b border-indigo-700/50">
+      <div>
+        <div class="text-xs font-bold flex items-center space-x-1">
+          <span>🌙 Quick Calming Bedtime Story</span>
+        </div>
+        <div class="text-[10px] text-indigo-200">Zero setup. Replays Aarav's top favorite or auto-generates calm.</div>
+      </div>
+      <button onclick="triggerQuickCalm()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow transition whitespace-nowrap">
+        ⚡ One-Tap Play
+      </button>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-[var(--border)] text-xs font-semibold bg-[var(--card)]">
+      <button id="tab-creator" onclick="switchTab('creator')" class="flex-1 py-3 text-center border-b-2 border-[var(--primary)] text-[var(--primary)] font-bold">
+        🪄 Story Creator
+      </button>
+      <button id="tab-studio" onclick="switchTab('studio')" class="flex-1 py-3 text-center text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+        🎙️ Voice Studio
+      </button>
+      <button id="tab-player" onclick="switchTab('player')" class="flex-1 py-3 text-center text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+        🔊 Room Player
+      </button>
+    </div>
+
+    <!-- TAB 1: STORY CO-CREATOR WIZARD -->
+    <div id="view-creator" class="p-5 space-y-4">
+      <div class="text-xs text-[var(--muted-foreground)] flex justify-between items-center">
+        <span>Step 1 of 2: Pick Story Parameters</span>
+        <span class="text-emerald-500 font-medium">Co-Creation Mode</span>
+      </div>
+
+      <!-- Main Character Input -->
+      <div>
+        <label class="block text-xs font-semibold mb-1">Main Character (Child / Friend Name)</label>
+        <input id="input-character" type="text" value="Aarav" class="w-full bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] rounded-lg p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)]">
+      </div>
+
+      <!-- Genre & Region Grid -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold mb-1">Genre</label>
+          <select id="input-genre" class="w-full bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] rounded-lg p-2.5 text-xs">
+            <option value="Bedtime Calm">🌙 Bedtime Calm</option>
+            <option value="Moral & Values">🌟 Moral & Values</option>
+            <option value="Adventure">🚀 Adventure</option>
+            <option value="Mystery">🔍 Mystery</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1">Region / Culture</label>
+          <select id="input-region" class="w-full bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] rounded-lg p-2.5 text-xs">
+            <option value="South Indian (Tamil)">🌴 South Indian (Tamil)</option>
+            <option value="North Indian (Hindi)">🕌 North Indian (Hindi)</option>
+            <option value="Indian Folklore">🪔 Indian Folklore</option>
+            <option value="Western Tales">🏰 Western Tales</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Toggles: Mythology & Fantasy -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <label class="flex items-center space-x-2 bg-[var(--background)] p-2.5 rounded-lg border border-[var(--border)] cursor-pointer text-xs">
+          <input id="input-mythology" type="checkbox" checked class="rounded">
+          <span>🪔 Include Mythology</span>
+        </label>
+        <label class="flex items-center space-x-2 bg-[var(--background)] p-2.5 rounded-lg border border-[var(--border)] cursor-pointer text-xs">
+          <input id="input-fantasy" type="checkbox" checked class="rounded">
+          <span>✨ Include Magic/Fantasy</span>
+        </label>
+      </div>
+
+      <!-- Creature Selector -->
+      <div>
+        <label class="block text-xs font-semibold mb-1">Companion Creature</label>
+        <select id="input-creature" class="w-full bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] rounded-lg p-2.5 text-xs">
+          <option value="Friendly Elephant (Raju)">🐘 Friendly Elephant (Raju)</option>
+          <option value="Wise Peacock (Mayura)">🦚 Wise Peacock (Mayura)</option>
+          <option value="Magical Flying Squirrel">🐿️ Magical Flying Squirrel</option>
+          <option value="Talking Parrot (Kili)">🦜 Talking Parrot (Kili)</option>
+        </select>
+      </div>
+
+      <!-- Voice Selection Mode -->
+      <div>
+        <label class="block text-xs font-semibold mb-1">Narration Voice</label>
+        <select id="input-voice" class="w-full bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] rounded-lg p-2.5 text-xs font-medium">
+          <option value="Amma (Cloned Parent Voice)">❤️ Amma's Cloned Voice (Trained)</option>
+          <option value="Appa (Cloned Parent Voice)">💙 Appa's Cloned Voice (Trained)</option>
+          <option value="Studio Narrator (Tamil/English)">🎙️ Studio Narrator (Default)</option>
+        </select>
+      </div>
+
+      <!-- Generate Story Button -->
+      <button onclick="generateStoryScript()" class="w-full bg-[var(--primary)] text-[var(--primary-foreground)] font-bold text-sm py-3 rounded-xl shadow-md hover:opacity-90 transition flex items-center justify-center space-x-2">
+        <span>🪄 Generate Story & Cast to Room</span>
+      </button>
+
+      <!-- Story Preview Output -->
+      <div id="story-result" class="hidden mt-4 p-3 bg-[var(--background)] rounded-xl border border-[var(--border)] text-xs space-y-2">
+        <div class="flex justify-between items-center text-[var(--muted-foreground)]">
+          <span id="res-title" class="font-bold text-[var(--foreground)]"></span>
+          <span class="bg-emerald-500/20 text-emerald-600 px-2 py-0.5 rounded text-[10px]">Ready to Cast</span>
+        </div>
+        <p id="res-content" class="text-[var(--foreground)] leading-relaxed italic"></p>
+        <button onclick="castToSpeaker()" class="w-full bg-emerald-600 text-white font-semibold py-2 rounded-lg text-xs hover:bg-emerald-700">
+          ▶️ Play Story to Bedroom Speaker
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 2: PARENT VOICE RECORDING STUDIO -->
+    <div id="view-studio" class="hidden p-5 space-y-4">
+      <div class="text-xs text-[var(--muted-foreground)] flex justify-between items-center">
+        <span>In-App Recording Studio</span>
+        <span class="bg-purple-500/20 text-purple-600 px-2 py-0.5 rounded text-[10px] font-bold">Modulation Learner Active</span>
+      </div>
+
+      <!-- Teleprompter Card -->
+      <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+        <div class="text-[10px] text-[var(--muted-foreground)] uppercase tracking-wider font-semibold">Teleprompter Script</div>
+        <p class="text-sm leading-relaxed font-medium text-[var(--foreground)]">
+          "Once upon a time, high in the hills of Madurai, young Aarav met Raju the gentle elephant under a giant banyan tree..."
+        </p>
+      </div>
+
+      <!-- Visual Waveform Simulator -->
+      <div class="h-12 bg-black/10 rounded-xl flex items-center justify-center space-x-1 px-4">
+        <div class="w-1 bg-[var(--primary)] h-4 rounded animate-pulse"></div>
+        <div class="w-1 bg-[var(--primary)] h-8 rounded animate-pulse"></div>
+        <div class="w-1 bg-[var(--primary)] h-6 rounded animate-pulse"></div>
+        <div class="w-1 bg-[var(--primary)] h-10 rounded animate-pulse"></div>
+        <div class="w-1 bg-[var(--primary)] h-5 rounded animate-pulse"></div>
+        <div class="w-1 bg-[var(--primary)] h-7 rounded animate-pulse"></div>
+      </div>
+
+      <!-- Recording Controls -->
+      <div class="flex items-center justify-around py-2">
+        <button onclick="toggleRecord()" id="btn-record" class="w-14 h-14 bg-red-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg hover:scale-105 transition">
+          🔴
+        </button>
+        <button onclick="saveToVault()" class="bg-[var(--primary)] text-[var(--primary-foreground)] text-xs px-4 py-2.5 rounded-lg font-semibold shadow">
+          💾 Save to Family Vault
+        </button>
+      </div>
+
+      <!-- Family Vault List -->
+      <div class="pt-2 border-t border-[var(--border)]">
+        <div class="text-xs font-bold mb-2">Private Family Vault (3 Stories Saved)</div>
+        <div class="space-y-1.5 text-xs text-[var(--muted-foreground)]">
+          <div class="flex justify-between p-2 bg-[var(--background)] rounded-lg">
+            <span>Mom - Panchatantra Tales</span>
+            <span class="text-emerald-500 font-medium">Recorded (3m 40s)</span>
+          </div>
+          <div class="flex justify-between p-2 bg-[var(--background)] rounded-lg">
+            <span>Dad - Flying Chariot Legend</span>
+            <span class="text-emerald-500 font-medium">Recorded (5m 12s)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: BEDTIME REMOTE ROOM PLAYER -->
+    <div id="view-player" class="hidden p-5 space-y-4">
+      <div class="bg-indigo-950 text-indigo-100 p-4 rounded-xl space-y-3 shadow-inner">
+        <div class="flex justify-between items-center text-xs">
+          <span class="opacity-80">CONNECTED SPEAKER</span>
+          <span class="bg-indigo-800 text-indigo-200 px-2 py-0.5 rounded text-[10px] font-bold">Bluetooth Remote</span>
+        </div>
+        <div>
+          <div id="player-title" class="text-base font-bold text-white">Aarav and Raju's Evening Walk</div>
+          <div id="player-subtitle" class="text-xs text-indigo-300">Narrated in: Amma's Voice • Tamil Setting</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="space-y-1">
+          <div class="w-full bg-indigo-900 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-emerald-400 h-full w-2/5"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-indigo-300">
+            <span>01:45</span>
+            <span>04:30</span>
+          </div>
+        </div>
+
+        <!-- Big Controls -->
+        <div class="flex justify-center items-center space-x-6 py-2">
+          <button class="text-indigo-300 hover:text-white text-lg">⏪ 15s</button>
+          <button onclick="togglePlay()" id="btn-player-play" class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-lg">
+            ⏸️
+          </button>
+          <button class="text-indigo-300 hover:text-white text-lg">⏩ 15s</button>
+        </div>
+      </div>
+
+      <!-- Controls: Volume & Sleep Timer -->
+      <div class="space-y-3 pt-1">
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-1">
+            <span>Bedroom Speaker Volume</span>
+            <span id="vol-display">50%</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" oninput="updateVol(this.value)" class="w-full accent-emerald-500 cursor-pointer">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-[var(--background)] p-3 rounded-xl border border-[var(--border)]">
+            <label class="block text-[10px] text-[var(--muted-foreground)] uppercase font-bold mb-1">Sleep Timer</label>
+            <select class="w-full bg-transparent text-xs font-semibold focus:outline-none">
+              <option>🌙 Auto Fade (20 mins)</option>
+              <option>🌙 Auto Fade (30 mins)</option>
+              <option>🌙 Auto Fade (45 mins)</option>
+            </select>
+          </div>
+          <div class="bg-[var(--background)] p-3 rounded-xl border border-[var(--border)] flex items-center justify-between">
+            <span class="text-xs font-semibold">Night Mode</span>
+            <input type="checkbox" checked class="rounded">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      ['creator', 'studio', 'player'].forEach(t => {
+        document.getElementById('view-' + t).classList.add('hidden');
+        const btn = document.getElementById('tab-' + t);
+        btn.classList.remove('border-b-2', 'border-[var(--primary)]', 'text-[var(--primary)]', 'font-bold');
+        btn.classList.add('text-[var(--muted-foreground)]');
+      });
+
+      document.getElementById('view-' + tabName).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tabName);
+      activeBtn.classList.add('border-b-2', 'border-[var(--primary)]', 'text-[var(--primary)]', 'font-bold');
+      activeBtn.classList.remove('text-[var(--muted-foreground)]');
+    }
+
+    function triggerQuickCalm() {
+      document.getElementById('player-title').innerText = "Raju the Helpful Elephant (Favorite Replay)";
+      document.getElementById('player-subtitle').innerText = "Smart Pick • Played 5 times at bedtime • Tamil";
+      switchTab('player');
+    }
+
+    function generateStoryScript() {
+      const char = document.getElementById('input-character').value || 'Aarav';
+      const genre = document.getElementById('input-genre').value;
+      const region = document.getElementById('input-region').value;
+      const creature = document.getElementById('input-creature').value;
+
+      document.getElementById('res-title').innerText = `${char} and the ${creature}`;
+      document.getElementById('res-content').innerText = 
+        `"Deep in ${region}, young ${char} set out on an evening adventure with ${creature}. As night fell, magical stars illuminated the village path..."`;
+      
+      document.getElementById('story-result').classList.remove('hidden');
+    }
+
+    function castToSpeaker() {
+      switchTab('player');
+    }
+
+    function toggleRecord() {
+      const btn = document.getElementById('btn-record');
+      if (btn.innerText.includes('🔴')) {
+        btn.innerText = '⏹️';
+        btn.classList.replace('bg-red-500', 'bg-slate-800');
+      } else {
+        btn.innerText = '🔴';
+        btn.classList.replace('bg-slate-800', 'bg-red-500');
+      }
+    }
+
+    function saveToVault() {
+      alert("Recording saved to Private Family Vault! AI modulation profile updated.");
+    }
+
+    function updateVol(val) {
+      document.getElementById('vol-display').innerText = val + '%';
+    }
+
+    function togglePlay() {
+      const btn = document.getElementById('btn-player-play');
+      btn.innerText = btn.innerText === '⏸️' ? '▶️' : '⏸️';
+    }
+  </script>
+</body>
+</html>
